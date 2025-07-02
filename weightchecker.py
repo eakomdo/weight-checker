@@ -39,16 +39,22 @@ while True:
         else:
             print("An unexpected error occurred. Please try again.")
             continue
-    if input("Do you want to check another weight? (yes/no): ").strip().lower() != 'yes':
-        if input == 'yes':
-            if input("New user? (yes/no): ").strip().lower() == 'yes':
-                continue
-            else:
-                print(f"Welcome back {name}! Let's check your weight again.")
-                continue
+      
+    continue_choice = input("Do you want to check another weight? (yes/no): ").strip().lower()
+
+    if continue_choice == 'yes':
+       
+        user_type = input("New user? (yes/no): ").strip().lower()
+        if user_type == 'yes':
+           
+            name = input("Enter your name: ")
         else:
-            print(f"Thank you {name} for using the weight checker program. Goodbye!")
-            break
+            # Keep existing name
+            print(f"Welcome back {name}!")
+        
+    else:
+        
+        break
                 
 input("Press Enter to exit.")
 
