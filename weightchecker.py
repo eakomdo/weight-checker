@@ -46,6 +46,8 @@ while True:
             print("Invalid response. Please enter 'yes' or 'no'.")
             continue
         if continue_choice == 'yes':
+        
+    
     
             user_type = input("New user? (yes/no): ").strip().lower()
             
@@ -61,6 +63,8 @@ while True:
             
         else:
             break
+    if continue_choice == 'no':
+        break
 
 print("Thank you for using the weight checker. Goodbye!")                
 input("Press Enter to exit.")
