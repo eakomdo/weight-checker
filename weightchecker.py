@@ -16,7 +16,7 @@ while True:
             continue
     except ValueError:
         print("Invalid input. Please enter a numeric value.")
-        break
+        continue
 
     while True:
         unit = input("Is this in pounds or kilograms? (p/k): ")
@@ -39,27 +39,28 @@ while True:
         else:
             print("An unexpected error occurred. Please try again.")
             continue
-      
-    continue_choice = input("Do you want to check another weight? (yes/no): ").strip().lower()
+        
+    while True:  
+        continue_choice = input("Do you want to check another weight? (yes/no): ").strip().lower()
 
-    if continue_choice == 'yes':
-       
-        user_type = input("New user? (yes/no): ").strip().lower()
-        if user_type == 'yes':
-           
-            name = input("Enter your name: ")
+        if continue_choice == 'yes':
+        
+            user_type = input("New user? (yes/no): ").strip().lower()
+            if user_type == 'yes':
+            
+                name = input("Enter your name: ")
+            else:
+                # Keep existing name
+                print(f"Welcome back {name}!")
+            
         else:
-            # Keep existing name
-            print(f"Welcome back {name}!")
-        
-    else:
-        
-        break
-                
+            break
+    continue
+print("Thank you for using the weight checker. Goodbye!")                
 input("Press Enter to exit.")
 
 
-    
+        
 
 
 
