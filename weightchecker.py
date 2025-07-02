@@ -42,12 +42,18 @@ while True:
         
     while True:  
         continue_choice = input("Do you want to check another weight? (yes/no): ").strip().lower()
-
+        if continue_choice not in ['yes', 'no']:
+            print("Invalid response. Please enter 'yes' or 'no'.")
+            continue
         if continue_choice == 'yes':
-        
+    
             user_type = input("New user? (yes/no): ").strip().lower()
-            if user_type == 'yes':
             
+            if user_type not in ['yes', 'no']:
+                    print("Invalid response. Please enter 'yes' or 'no'.")
+                    continue
+            if user_type == 'yes':
+                
                 name = input("Enter your name: ")
             else:
                 # Keep existing name
@@ -55,7 +61,7 @@ while True:
             
         else:
             break
-    continue
+
 print("Thank you for using the weight checker. Goodbye!")                
 input("Press Enter to exit.")
 
