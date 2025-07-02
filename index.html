@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .error {
+            background: #fee;
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+        
+        .success {
+            background: #efe;
+            border-left-color: #27ae60;
+            color: #27ae60;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+        
+        .conversion-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .conversion-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .conversion-row:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weight Converter</h1>
+        
+        <form id="weightForm">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="number" id="weight" name="weight" step="0.01" min="0.1" max="999" required placeholder="Enter your weight">
+            </div>
+            
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <select id="unit" name="unit" required>
+                    <option value="">Select unit</option>
+                    <option value="p">Pounds (lbs)</option>
+                    <option value="k">Kilograms (kg)</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submitBtn">Convert Weight</button>
+        </form>
+        
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        document.getElementById('weightForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name').trim(),
+                weight: parseFloat(formData.get('weight')),
+                unit: formData.get('unit')
+            };
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Converting...';
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result loading';
+            resultDiv.innerHTML = 'Converting your weight...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/convert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Success
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>Hello ${result.user}!</h3>
+                        <p>${result.message}</p>
+                        <div class="conversion-details">
+                            <div class="conversion-row">
+                                <span>Original:</span>
+                                <span>${result.conversion.original_weight} ${result.conversion.original_unit}</span>
+                            </div>
+                            <div class="conversion-row">
+                                <span>Converted:</span>
+                                <span>${result.conversion.converted_weight} ${result.conversion.converted_unit}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Error
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${result.error}`;
+                }
+            } catch (error) {
+                // Network error
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<strong>Error:</strong> Could not connect to the server. Make sure the API is running on port 5000.`;
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Convert Weight';
+            }
+        });
+    </script>
+</body>
+</html>
