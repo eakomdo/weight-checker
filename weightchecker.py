@@ -3,6 +3,8 @@ name = input("Enter your name: ")
 if not name.strip():
     print("Name cannot be empty. Please enter a valid name.")
     name = input("Enter your name: ")
+print(f"Hi {name}, welcome to the weight checker!")
+    
 
 
 while True:
@@ -45,22 +47,25 @@ while True:
         if continue_choice not in ['yes', 'no']:
             print("Invalid response. Please enter 'yes' or 'no'.")
             continue
-        if continue_choice == 'yes':
         
+        
+        if continue_choice == 'yes':
     
-    
-            user_type = input("New user? (yes/no): ").strip().lower()
-            
-            if user_type not in ['yes', 'no']:
-                    print("Invalid response. Please enter 'yes' or 'no'.")
-                    continue
-            if user_type == 'yes':
+            while True:
+                user_type = input("New user? (yes/no): ").strip().lower()
                 
-                name = input("Enter your name: ")
-            else:
-                # Keep existing name
-                print(f"Welcome back {name}!")
-            
+                if user_type not in ['yes', 'no']:
+                        print("Invalid response. Please enter 'yes' or 'no'.")
+                        continue
+                  
+                if user_type == 'yes':
+                    
+                    name = input("Enter your name: ")
+                else:
+                    # Keep existing name
+                    print(f"Welcome back {name}!")
+                break
+            break
         else:
             break
     if continue_choice == 'no':
